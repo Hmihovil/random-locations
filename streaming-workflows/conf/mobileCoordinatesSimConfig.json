@@ -1,0 +1,21 @@
+{
+  "workflows": [
+    {
+      "workflowName": "mobileCoordinates",
+      "workflowFilename": "mobileCoordinatesWorkflow.json"
+    }
+  ],
+  "producers": [
+    {
+      "type": "logger"
+    },
+    {
+      "type": "kafka",
+      "broker.server": "localhost",
+      "broker.port": 9092,
+      "topic": "mobileCoordinates",
+      "flatten": false,
+      "sync": false
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+datasource.master.url: jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE;
+mode: random
+#mode: kafka
+queries:
+  - kafkaProperties:
+      bootstrap-servers: localhost:9092
+    sql: >
+      INSERT INTO mobileCoordinates
+      SELECT coordinates.latitude as latitude, coordinates.longitude as longitude
+      FROM mobileCoordinates
+  - kafkaProperties:
+      bootstrap-servers: localhost:9092
+    sql: >
+      INSERT INTO flights
+      SELECT coordinatesFrom.latitude as fromLatitude, coordinatesFrom.longitude as fromLongitude, coordinatesTo.latitude as toLatitude, coordinatesTo.longitude as toLongitude
+      FROM flights

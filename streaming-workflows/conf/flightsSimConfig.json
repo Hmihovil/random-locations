@@ -1,0 +1,21 @@
+{
+  "workflows": [
+    {
+      "workflowName": "flights",
+      "workflowFilename": "flightsWorkflow.json"
+    }
+  ],
+  "producers": [
+    {
+      "type": "logger"
+    },
+    {
+      "type": "kafka",
+      "broker.server": "localhost",
+      "broker.port": 9092,
+      "topic": "flights",
+      "flatten": false,
+      "sync": false
+    }
+  ]
+}

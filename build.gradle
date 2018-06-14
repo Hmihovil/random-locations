@@ -1,0 +1,72 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.2.50'
+        springBootVersion = '2.0.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+    }
+}
+
+ext {
+    geoIpVersion = "2.12.0"
+    socketIoVersion = "1.7.7"
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'kotlin-kapt'
+
+group = 'com.ssouris'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-webflux')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+    compile('org.springframework.kafka:spring-kafka')
+    compile 'org.apache.kafka:kafka-streams'
+    kapt "org.springframework.boot:spring-boot-configuration-processor"
+
+//    testCompile("org.apache.kafka:kafka-streams:1.0.0:test")
+    compile('com.h2database:h2')
+
+    compile group: 'com.datamountaineer', name: 'json-kcql_2.11', version: '1.0'
+    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.9.4'
+    compile "com.datamountaineer:kcql:2.4.0"
+    compile "io.reactivex.rxjava2:rxjava:2.1.4"
+
+    compile("com.maxmind.geoip2:geoip2:${geoIpVersion}")
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compile("org.jetbrains.kotlin:kotlin-reflect")
+    compile("com.corundumstudio.socketio:netty-socketio:${socketIoVersion}")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('io.projectreactor:reactor-test')
+}
