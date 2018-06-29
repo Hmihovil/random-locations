@@ -1,4 +1,4 @@
-package com.ssouris.randomlocations.model
+package com.ssouris.randomlocations
 
 import com.fasterxml.jackson.databind.JsonNode
 

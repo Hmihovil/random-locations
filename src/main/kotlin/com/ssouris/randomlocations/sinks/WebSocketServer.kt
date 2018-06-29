@@ -2,42 +2,25 @@ package com.ssouris.randomlocations.sinks
 
 import com.corundumstudio.socketio.Configuration
 import com.corundumstudio.socketio.SocketIOServer
-import org.springframework.context.SmartLifecycle
+import org.springframework.beans.factory.DisposableBean
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
 
 @Component
-class WebSocketServer : SmartLifecycle {
+class WebSocketServer : InitializingBean, DisposableBean {
 
-    final val server: SocketIOServer
+    var server: SocketIOServer? = null
 
-    private var isRunning: Boolean = false
-
-    init {
+    override fun afterPropertiesSet() {
         val config = Configuration()
         config.hostname = "localhost"
         config.port = 9093
         server = SocketIOServer(config)
+        server?.start()
     }
 
-    override fun isAutoStartup() = true
-
-    override fun stop(callback: Runnable) {
-        callback.run()
-        stop()
+    override fun destroy() {
+        server?.stop()
     }
-
-    override fun start() {
-        server.start()
-        isRunning = true
-    }
-
-    override fun stop() {
-        server.stop()
-        isRunning = false
-    }
-
-    override fun isRunning() = isRunning
-
-    override fun getPhase() = 0
 
 }

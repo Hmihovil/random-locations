@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 
 @Configuration
-class CustomMvcConfiguration : WebFluxConfigurer {
+class MvcConfiguration : WebFluxConfigurer {
 
     @Value("classpath:/static/index.html")
     private lateinit var indexHtml: Resource

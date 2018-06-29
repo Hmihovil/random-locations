@@ -1,7 +1,8 @@
-package com.ssouris.randomlocations.datasource
+package com.ssouris.randomlocations.datasource.kafka
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.ssouris.randomlocations.JsonKcqlQuery.run
+import com.ssouris.randomlocations.loadFrom
 import com.ssouris.randomlocations.ql.KafkaTopicQueryLanguage
 import io.reactivex.subjects.PublishSubject
 import org.apache.kafka.common.serialization.Serdes
@@ -17,7 +18,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
-import java.util.*
+import java.util.Properties
+import java.util.UUID
 
 
 class KafkaConsumer : DisposableBean {
@@ -29,16 +31,8 @@ class KafkaConsumer : DisposableBean {
     private var stream: KafkaStreams? = null
     private var rxSubject: PublishSubject<Pair<KafkaTopicQueryLanguage, JsonNode>>? = null
 
-    fun observe(sql: String, kafkaProperties: KafkaProperties) =
-            startKafkaStreams(KafkaTopicQueryLanguage.parse(sql), kafkaProperties)
-
-    override fun destroy() {
-        this.stream?.close()
-        this.rxSubject?.onComplete()
-    }
-
-    private fun startKafkaStreams(kafkaTopicQueryLanguage: KafkaTopicQueryLanguage, kafkaProperties: KafkaProperties): PublishSubject<Pair<KafkaTopicQueryLanguage, JsonNode>> {
-
+    fun observe(sql: String, kafkaProperties: KafkaProperties): PublishSubject<Pair<KafkaTopicQueryLanguage, JsonNode>> {
+        val kafkaTopicQueryLanguage = KafkaTopicQueryLanguage.parse(sql)
         val props = Properties()
         props.loadFrom(kafkaProperties.buildConsumerProperties())
         props[StreamsConfig.APPLICATION_ID_CONFIG] = UUID.randomUUID().toString()
@@ -57,9 +51,12 @@ class KafkaConsumer : DisposableBean {
         return subject
     }
 
-    private fun runQuery(value: JsonNode, mainSql: KafkaTopicQueryLanguage): JsonNode = run(value, mainSql.ksql)
+    override fun destroy() {
+        this.stream?.close()
+        this.rxSubject?.onComplete()
+    }
 
-    private fun Properties.loadFrom(properties: Map<String, Any>) = properties.forEach { this[it.key] = it.value }
+    private fun runQuery(value: JsonNode, mainSql: KafkaTopicQueryLanguage): JsonNode = run(value, mainSql.ksql)
 
 }
 

@@ -1,8 +1,8 @@
 package com.ssouris.randomlocations.sinks
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.ssouris.randomlocations.model.Flight
-import com.ssouris.randomlocations.model.MobileCoordinates
+import com.ssouris.randomlocations.Flight
+import com.ssouris.randomlocations.MobileCoordinates
 import com.ssouris.randomlocations.ql.KafkaTopicQueryLanguage
 import org.springframework.stereotype.Component
 

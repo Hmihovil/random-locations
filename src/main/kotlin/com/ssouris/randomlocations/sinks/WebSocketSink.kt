@@ -1,7 +1,7 @@
 package com.ssouris.randomlocations.sinks
 
-import com.ssouris.randomlocations.model.Flight
-import com.ssouris.randomlocations.model.MobileCoordinates
+import com.ssouris.randomlocations.Flight
+import com.ssouris.randomlocations.MobileCoordinates
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,10 +16,9 @@ class WebSocketSink(private val webSocketServer: WebSocketServer) {
 
     fun sendMobileCoordinates(mobileCoordinates: List<MobileCoordinates>) = send(MOBILE_COORDINATES, mobileCoordinates)
 
-    fun send(channel: String, objects: List<Any>) = eventBus().sendEvent(channel, objects)
+    fun send(channel: String, objects: List<Any>) = eventBus()?.sendEvent(channel, objects)
 
-    private fun eventBus() = webSocketServer.server.broadcastOperations
-
+    private fun eventBus() = webSocketServer.server?.broadcastOperations
 
 }
 
